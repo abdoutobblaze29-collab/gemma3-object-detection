@@ -7,7 +7,6 @@ from PIL import ImageDraw, Image
 
 from transformers import Idefics3Processor
 
-from create_dataset import format_objects
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -74,13 +73,41 @@ def train_collate_function(batch_of_samples, processor, device, transform=None):
     prompts = []
     for sample in batch_of_samples:
         if transform:
-            transformed = transform(image=np.array(sample["image"]), bboxes=sample["objects"]["bbox"], category_ids=sample["objects"]["category"])
+            transformed = transform(
+                image=np.array(sample["image"]),
+                bboxes=sample["objects"]["bbox"],
+                category_ids=sample["objects"]["category"],
+            )
+        
             sample["image"] = transformed["image"]
             sample["objects"]["bbox"] = transformed["bboxes"]
             sample["objects"]["category"] = transformed["category_ids"]
             sample["height"] = sample["image"].shape[0]
             sample["width"] = sample["image"].shape[1]
-            sample['label_for_paligemma'] = format_objects(sample)['label_for_paligemma'] 
+        
+            detection_strings = []
+        
+            for bbox, class_name in zip(
+                sample["objects"]["bbox"],
+                sample["objects"]["category_name"],
+            ):
+                x, y, w, h = bbox
+                x1, y1 = x, y
+                x2, y2 = x + w, y + h
+        
+                def loc(value, max_value):
+                    value = max(0, min(value, max_value))
+                    return f"<loc{int(round(value * 1024 / max_value)):04}>"
+        
+                detection_strings.append(
+                    loc(y1, sample["height"])
+                    + loc(x1, sample["width"])
+                    + loc(y2, sample["height"])
+                    + loc(x2, sample["width"])
+                    + f" {class_name}"
+                )
+        
+            sample["label_for_paligemma"] = " ; ".join(detection_strings) 
         images.append([sample["image"]])
         if isinstance(processor, Idefics3Processor):
             prompts.append(
