@@ -96,10 +96,10 @@ if __name__ == "__main__":
 
             visualize_bounding_boxes(
                 image=image,
-                output_text=output_text,
+                label=output_text,
                 width=width,
                 height=height,
-                output_path=f"outputs/output_{file_count}.png",
+                name=f"outputs/output_{file_count}.png",
             )
 
             file_count += 1
