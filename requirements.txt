@@ -1,11 +1,15 @@
 torch
-transformers
 accelerate
-datasets
 matplotlib
-huggingface_hub[hf_xet]
-bitsandbytes
 wandb
 peft
+bitsandbytes
 albumentations
-argparse
+huggingface_hub[hf_xet]
+
+numpy==2.2.6
+pyarrow==24.0.0
+pandas==2.2.3
+datasets==2.19.0
+
+transformers @ git+https://github.com/huggingface/transformers.git
