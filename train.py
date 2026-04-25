@@ -5,7 +5,7 @@ from functools import partial
 import torch
 from datasets import load_dataset
 from torch.utils.data import DataLoader
-from transformers import AutoProcessor, AutoModelForVision2Seq, AutoModelForCausalLM
+from transformers import AutoProcessor, AutoModelForImageTextToText, AutoModelForCausalLM
 
 from config import Configuration
 from utils import train_collate_function, get_processor_with_new_tokens, get_model_with_resize_token_embeddings
