@@ -169,7 +169,7 @@ def get_processor_with_new_tokens(processor):
     return processor
 
 def get_model_with_resize_token_embeddings(model, processor):
-    tokenizer = processor.tokenizer
+    tokenizer = processor.tokenizer if hasattr(processor, "tokenizer") else processor
     model.resize_token_embeddings(len(tokenizer))
     logger.info(f"Model's token embeddings resized to: {len(tokenizer)}")
     return model
