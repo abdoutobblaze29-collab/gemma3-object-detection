@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     logger.info("Loading model")
     if "SmolVLM" in cfg.model_id:
-        model = AutoModelForVision2Seq.from_pretrained(cfg.model_id, device_map="auto")
+        model = AutoModelForImageTextToText.from_pretrained(cfg.model_id, device_map="auto")
     else:
         model = AutoModelForCausalLM.from_pretrained(cfg.model_id, torch_dtype=cfg.dtype, device_map="auto", attn_implementation=cfg.attn_implementation)
 
